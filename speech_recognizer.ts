@@ -59,6 +59,7 @@ namespace emakefun {
      */
     //% subcategory="SpeechRecognizer"
     //% block="add speech command $phrase|with index $index" weight=90
+    //% index.min=0 index.max=255
     export function addSpeechCommand(index: number, phrase: string) {
       waitCommandConsumed()
       i2c_device_.writeBytes(Address.Command, [Command.AddSpeechCommand, index])
