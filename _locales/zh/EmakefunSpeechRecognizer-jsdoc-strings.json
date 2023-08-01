@@ -1,0 +1,8 @@
+{
+  "emakefun.SpeechRecognizer.addSpeechCommand": "添加语音命令",
+  "emakefun.SpeechRecognizer.addSpeechCommand|param|index": "识别该命令时返回的索引",
+  "emakefun.SpeechRecognizer.addSpeechCommand|param|phrase": "要添加的语音命令词组",
+  "emakefun.SpeechRecognizer.initialize": "初始化语音识别器",
+  "emakefun.SpeechRecognizer.isSpeechRecognized": "检查是否识别到语音命令。\n@returns 如果成功识别到语音命令则返回true,否则返回false",
+  "emakefun.SpeechRecognizer.recognitionResult": "获取识别到的语音命令索引\n@returns 识别到的语音命令的索引"
+}

@@ -1,7 +1,7 @@
 {
     "name": "EmakefunSpeechRecognizer",
     "version": "1.0.0",
-    "description": "",
+    "description": "Extension for Emakefun Speech Recognizer",
     "dependencies": {
         "core": "*",
         "EmakefunI2cDevice": "github:emakefun-microbit-library/emakefun_i2c_device"
@@ -9,7 +9,9 @@
     "files": [
         "README.md",
         "main.blocks",
-        "speech_recognizer.ts"
+        "speech_recognizer.ts",
+        "_locales/zh/EmakefunSpeechRecognizer-jsdoc-strings.json",
+        "_locales/zh/EmakefunSpeechRecognizer-strings.json"
     ],
     "testFiles": [
         "test.ts"
