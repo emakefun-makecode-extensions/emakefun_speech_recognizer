@@ -70,23 +70,17 @@ namespace emakefun {
     }
 
     /**
-     * Check if a speech command is recognized.
-     * @returns true if a speech command is successfully recognized, false otherwise
-     */
-    //% block="speech recognized" weight=80
-    //% subcategory="SpeechRecognizer"
-    export function isSpeechRecognized(): boolean {
-      return i2c_device_.readByte(Address.Event) === Event.RecognitionSuccess
-    }
-
-    /**
      * Get the recognized speech command index  
-     * @returns the index of the recognized speech command
      */
     //% block="speech recognition result"
     //% subcategory="SpeechRecognizer"
-    export function recognitionResult(): number {
-      return i2c_device_.readByte(Address.Result);
+    //% blockSetVariable=speech_recognition_result
+    export function result(): number {
+      if (i2c_device_.readByte(Address.Event) === Event.RecognitionSuccess) {
+        return i2c_device_.readByte(Address.Result);
+      } else {
+        return -1;
+      }
     }
 
     function waitCommandConsumed(): void {
