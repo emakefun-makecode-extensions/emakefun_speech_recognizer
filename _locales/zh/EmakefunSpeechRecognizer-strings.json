@@ -1,8 +1,7 @@
 {
-  "emakefun.SpeechRecognizer.addSpeechCommand|block": "添加语音命令$phrase,索引为$index",
-  "emakefun.SpeechRecognizer.initialize|block": "使用I2C地址$i2c_address初始化语音识别模块",
-  "emakefun.SpeechRecognizer.result|block": "语音识别结果",
-  "emakefun|block": "Emakefun",
+  "emakefun.SpeechRecognizer.addSpeechCommand|block": "向$this添加语音命令|索引 = $index|语音词组 = $phrase",
+  "emakefun.SpeechRecognizer.result|block": "从$this获取语音识别到的命令索引",
+  "emakefun.createSpeechRecognizer|block": "创建语音识别模块|I2C地址 = $i2c_address",
   "{id:category}Emakefun": "Emakefun",
   "{id:subcategory}SpeechRecognizer": "语音识别模块"
 }
