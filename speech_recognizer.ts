@@ -1,7 +1,7 @@
 //% block="Emakefun"
 namespace emakefun {
   declare const enum Event {
-    RecognitionSuccess = 3
+    RecognitionSuccess = 3,
   }
 
   declare const enum CommandFlag {
@@ -38,17 +38,17 @@ namespace emakefun {
      * @param i2c_address I2C address of the module, default 0x30
      */
     constructor(i2c_address: number = 0x30) {
-      this.i2c_device = new emakefun.I2cDevice(i2c_address)
-      this.waitCommandConsumed()
-      this.i2c_device.writeByte(Address.Command, Command.Reset)
-      this.commandSendCompleted()
+      this.i2c_device = new emakefun.I2cDevice(i2c_address);
+      this.waitCommandConsumed();
+      this.i2c_device.writeByte(Address.Command, Command.Reset);
+      this.commandSendCompleted();
     }
 
     /**
      * Add a new speech command
      * @param index the index to return when command is recognized
      * @param phrase the speech phrase to add
-    */
+     */
     //% block="add speech command to $this|index = $index speech phrase = $phrase"
     //% subcategory="SpeechRecognizer"
     //% this.defl=speech_recognizer
@@ -56,16 +56,16 @@ namespace emakefun {
     //% inlineInputMode=external
     //% index.min=0 index.max=255
     addSpeechCommand(index: number, phrase: string) {
-      const data = Buffer.fromUTF8(phrase)
-      this.waitCommandConsumed()
-      this.i2c_device.writeBytes(Address.Command, [Command.AddSpeechCommand, index])
-      this.i2c_device.writeBytes(Address.PhraseData, data)
-      this.i2c_device.writeByte(Address.PhraseLength, data.length)
-      this.commandSendCompleted()
+      const data = Buffer.fromUTF8(phrase);
+      this.waitCommandConsumed();
+      this.i2c_device.writeBytes(Address.Command, [Command.AddSpeechCommand, index]);
+      this.i2c_device.writeBytes(Address.PhraseData, data);
+      this.i2c_device.writeByte(Address.PhraseLength, data.length);
+      this.commandSendCompleted();
     }
 
     /**
-     * Get the recognized speech command index  
+     * Get the recognized speech command index
      */
     //% block="|get speech recognition index of | phrase from $this"
     //% subcategory="SpeechRecognizer"
@@ -81,11 +81,12 @@ namespace emakefun {
     }
 
     private waitCommandConsumed(): void {
-      while (this.i2c_device.readByte(Address.CommandFlag) !== CommandFlag.CommandConsumed);
+      while (this.i2c_device.readByte(Address.CommandFlag) !== CommandFlag.CommandConsumed)
+        ;
     }
 
     private commandSendCompleted(): void {
-      this.i2c_device.writeByte(Address.CommandFlag, CommandFlag.CommandSendCompleted)
+      this.i2c_device.writeByte(Address.CommandFlag, CommandFlag.CommandSendCompleted);
     }
   }
 
@@ -96,6 +97,6 @@ namespace emakefun {
   //% weight=100
   //% inlineInputMode=external
   export function createSpeechRecognizer(i2c_address: number = 0x30): SpeechRecognizer {
-    return new SpeechRecognizer(i2c_address)
+    return new SpeechRecognizer(i2c_address);
   }
 }

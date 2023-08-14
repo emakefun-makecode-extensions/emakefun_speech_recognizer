@@ -4,7 +4,7 @@
     "description": "Extension for Emakefun Speech Recognizer",
     "dependencies": {
         "core": "*",
-        "EmakefunI2cDevice": "github:emakefun-microbit-library/emakefun_i2c_device#v1.0.1"
+        "EmakefunI2cDevice": "github:emakefun-microbit-library/emakefun_i2c_device#v1.0.2"
     },
     "files": [
         "README.md",
