@@ -6,6 +6,8 @@
 
 - Through this extension, you can easily use the Emakefun speech recognizer to add voice commands and get recognition results in the MakeCode Blocks editor.
 
+- You can get this module [here](https://item.taobao.com/item.htm?spm=a1z10.5-c-s.w4002-21556097795.65.30e2feb74EofsM&id=650810486058).
+
 ## Usage
 
 - Use the createSpeechRecognizer block to create an instance of the speech recognizer and configure the I2C address.
