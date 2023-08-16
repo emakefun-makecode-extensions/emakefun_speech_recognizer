@@ -1,11 +1,11 @@
-let speech_recognition_result = 0
-let speech_recognizer = emakefun.createSpeechRecognizer(48)
+let recognized_speech_index = 0
+let speech_recognizer = Emakefun.createSpeechRecognizer(48)
 speech_recognizer.addSpeechCommand(0, 'bei jing')
 speech_recognizer.addSpeechCommand(1, 'shang hai')
 speech_recognizer.addSpeechCommand(2, 'cheng du')
 basic.forever(function() {
-  speech_recognition_result = speech_recognizer.result()
-  if (speech_recognition_result != -1) {
-    basic.showNumber(speech_recognition_result)
+  recognized_speech_index = speech_recognizer.recognizedSpeechIndex()
+  if (recognized_speech_index != -1) {
+    basic.showNumber(recognized_speech_index)
   }
 })

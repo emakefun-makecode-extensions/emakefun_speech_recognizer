@@ -1,5 +1,5 @@
 //% block="Emakefun"
-namespace emakefun {
+namespace Emakefun {
   declare const enum Event {
     RecognitionSuccess = 3,
   }
@@ -26,19 +26,17 @@ namespace emakefun {
     None = 0,
     Reset = 1,
     AddSpeechCommand = 2,
-    SetTrigger = 3,
-    SetTimeout = 4,
   }
 
   export class SpeechRecognizer {
-    private readonly i2c_device: emakefun.I2cDevice = undefined
+    private readonly i2c_device: Emakefun.I2cDevice = undefined
 
     /**
      * Constructor
      * @param i2c_address I2C address of the module, default 0x30
      */
     constructor(i2c_address: number = 0x30) {
-      this.i2c_device = new emakefun.I2cDevice(i2c_address);
+      this.i2c_device = new Emakefun.I2cDevice(i2c_address);
       this.waitCommandConsumed();
       this.i2c_device.writeByte(Address.Command, Command.Reset);
       this.commandSendCompleted();
@@ -49,7 +47,7 @@ namespace emakefun {
      * @param index the index to return when command is recognized
      * @param phrase the speech phrase to add
      */
-    //% block="add speech command to $this|index = $index speech phrase = $phrase"
+    //% block="$this add speech command|index = $index|speech phrase = $phrase"
     //% subcategory="SpeechRecognizer"
     //% this.defl=speech_recognizer
     //% weight=90
@@ -65,21 +63,22 @@ namespace emakefun {
     }
 
     /**
-     * Get the recognized speech command index
+     * Get the index number of the recognized speech command phrase
+     * that was previously added with addSpeechCommand.
      */
-    //% block="|get speech recognition index of | phrase from $this"
+    //% block="$this recognized speech index"
     //% subcategory="SpeechRecognizer"
     //% this.defl=speech_recognizer
-    //% blockSetVariable=speech_recognition_result
+    //% blockSetVariable=recognized_speech_index
     //% inlineInputMode=external
-    result(): number {
-      if (this.i2c_device.readByte(Address.Event) === Event.RecognitionSuccess) {
-        return this.i2c_device.readByte(Address.Result);
-      } else {
-        return -1;
-      }
+    recognizedSpeechIndex(): number {
+      return this.i2c_device.readByte(Address.Event) === Event.RecognitionSuccess ? this.i2c_device.readByte(Address.Result) :
+                                                                                    -1;
     }
 
+    /**
+     * Wait for the command to be consumed before sending a new one
+     */
     private waitCommandConsumed(): void {
       while (this.i2c_device.readByte(Address.CommandFlag) !== CommandFlag.CommandConsumed)
         ;
