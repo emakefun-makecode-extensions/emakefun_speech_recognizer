@@ -22,7 +22,7 @@
 
 ## Example
 
-You can copy the code from below or view the project (blocks and JavaScript view) here.
+You can copy the code from below or view the project (blocks and JavaScript view) [here](https://makecode.microbit.org/_7fTL9aDeWJfc).
 
 ```blocks
 let recognized_speech_index = 0
