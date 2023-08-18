@@ -2,7 +2,7 @@
 
 ## Introduction
 
-- This project implements a MakeCode extension for Microsoft to integrate the Emakefun speech recognition module's capabilities on the micro:bit.
+- This project implements a MakeCode extension for Microbit to integrate the Emakefun speech recognition module's capabilities on the micro:bit.
 
 - Through this extension, you can easily use the Emakefun speech recognizer to add voice commands and get recognition results in the MakeCode Blocks editor.
 
