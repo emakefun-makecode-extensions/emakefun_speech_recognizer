@@ -1,15 +1,12 @@
-let speech_recognizer = emakefun.createSpeechRecognizer(48);
-speech_recognizer.SetRecognitionMode(emakefun.SpeechRecognitionMode.RecognitionAuto);
-speech_recognizer.addKeyword(0, 'bei jing');
-speech_recognizer.addKeyword(1, 'shang hai');
-speech_recognizer.addKeyword(2, 'cheng du');
-
+let speech_recognizer = emakefun.createSpeechRecognizer(48)
+speech_recognizer.addKeyword(0, 'bei jing')
+speech_recognizer.addKeyword(1, 'shang hai')
+speech_recognizer.addKeyword(2, 'cheng du')
 basic.forever(function() {
-  speech_recognizer.recognize();
+  speech_recognizer.recognize()
   if (speech_recognizer.result() >= 0) {
-    basic.showNumber(speech_recognizer.result());
-    basic.pause(500);
-  } else {
-    basic.clearScreen();
+    basic.showNumber(speech_recognizer.result())
+    basic.pause(500)
+    basic.clearScreen()
   }
 })

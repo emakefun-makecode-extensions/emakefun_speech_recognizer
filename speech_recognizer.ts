@@ -43,7 +43,6 @@ namespace emakefun {
    */
   export class SpeechRecognizer {
     private readonly i2c_device: emakefun.I2cDevice = undefined;
-    private on_start_waiting_for_trigger: () => void = undefined;
 
     // DataAddress
     private static readonly kDataAddressVersion = 0x00;
@@ -77,7 +76,7 @@ namespace emakefun {
     //% subcategory="SpeechRecognizer"
     //% this.defl=speech_recognizer
     //% weight=99
-    SetRecognitionMode(speech_recognition_mode: SpeechRecognitionMode) {
+    setRecognitionMode(speech_recognition_mode: SpeechRecognitionMode) {
       this.waitUntilIdle();
       this.i2c_device.writeByte(SpeechRecognizer.kDataAddressRecognitionMode, speech_recognition_mode);
     }

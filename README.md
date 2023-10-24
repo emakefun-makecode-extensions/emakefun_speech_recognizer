@@ -10,13 +10,34 @@
 
 ## Usage
 
-- Use the createSpeechRecognizer block to create an instance of the speech recognizer and configure the I2C address.
+- Use the `createSpeechRecognizer` block to create an instance of the speech recognizer and configure the I2C address.The default I2C address is `0x30` (decimal `48`).
 
-- Use the addSpeechCommand block to add voice commands to recognize and index numbers.
+- Use the `setRecognitionMode` block to set the recognition mode. The modes include:
 
-- In a loop, use the recognizedSpeechIndex block to get the recognition result. A return value of -1 means no speech command was recognized. Only a return index >= 0 indicates successful recognition.
+  - `RecognitionAuto`: Always listening mode
+  - `ButtonTrigger`: Button trigger mode
+  - `KeywordTrigger`: Keyword trigger mode
+  - `KeywordOrButtonTrigger`: Keyword or button trigger mode
+  
+- Use the `setTimeout` block to set the recognition timeout in milliseconds.
 
-- Based on the return value of recognizedSpeechIndex, perform appropriate actions - for example, display the index when >= 0 to show the recognized speech command.
+- Use the `addKeyword` block to add voice commands to recognize and index numbers.
+
+- In a loop, use the `recognize` block to make the module work.
+
+- Use the `result` block to get the result. A return value of -1 means no speech command was recognized. Only a return index >= 0 indicates successful recognition.
+
+- Based on the return value of result, perform appropriate actions - for example, display the index when >= 0 to show the recognized speech command.
+
+- Use the `eventOccurred` block to check if an event occurred. The events include:
+
+  - `EventNone`: No event
+  - `EventStartWaitingForTrigger`: Started waiting for trigger
+  - `EventButtonTriggered`: Button trigger occurred
+  - `EventKeywordTriggered`: Keyword trigger occurred
+  - `EventStartRecognizing`: Started recognizing speech
+  - `EventSpeechRecognized`: Speech was recognized
+  - `EventSpeechRecognitionTimedOut`: Speech recognition timed out
 
 ## Hardware
 
@@ -24,19 +45,117 @@
 
 ## Example
 
-You can copy the code from below or view the project (blocks and JavaScript view) [here](https://makecode.microbit.org/_7fTL9aDeWJfc).
+### Simple example
+
+You can copy the code from below or view the project (blocks and JavaScript view) [here](https://makecode.microbit.org/_V65fvf7b4VH2).
 
 ```blocks
-let recognized_speech_index = 0
-let speech_recognizer = Emakefun.createSpeechRecognizer(48)
-speech_recognizer.addSpeechCommand(0, 'bei jing')
-speech_recognizer.addSpeechCommand(1, 'shang hai')
-speech_recognizer.addSpeechCommand(2, 'cheng du')
-basic.forever(function() {
-  recognized_speech_index = speech_recognizer.recognizedSpeechIndex()
-  if (recognized_speech_index != -1) {
-    basic.showNumber(recognized_speech_index)
-  }
+let speech_recognizer = emakefun.createSpeechRecognizer(
+48
+)
+speech_recognizer.addKeyword(0, "bei jing")
+speech_recognizer.addKeyword(1, "shang hai")
+speech_recognizer.addKeyword(2, "cheng du")
+basic.forever(function () {
+    speech_recognizer.recognize()
+    if (speech_recognizer.result() >= 0) {
+        basic.showNumber(speech_recognizer.result())
+        basic.pause(500)
+        basic.clearScreen()
+    }
+})
+```
+
+### Button trigger mode
+
+You can copy the code from below or view the project (blocks and JavaScript view) [here](https://makecode.microbit.org/_EM0PfJVrEUDr).
+
+```blocks
+let speech_recognizer = emakefun.createSpeechRecognizer(
+48
+)
+speech_recognizer.setRecognitionMode(emakefun.SpeechRecognitionMode.ButtonTrigger)
+speech_recognizer.addKeyword(0, "xiao yi xiao yi")
+speech_recognizer.addKeyword(1, "bei jing")
+speech_recognizer.addKeyword(2, "shang hai")
+speech_recognizer.addKeyword(3, "guang zhou")
+basic.forever(function () {
+    speech_recognizer.recognize()
+    if (speech_recognizer.result() >= 0) {
+        basic.showNumber(speech_recognizer.result())
+        basic.pause(500)
+    }
+    if (speech_recognizer.eventOccurred(emakefun.SpeechRecognitionEvent.EventStartRecognizing)) {
+        basic.showIcon(IconNames.Happy)
+    } else if (speech_recognizer.eventOccurred(emakefun.SpeechRecognitionEvent.EventSpeechRecognized)) {
+        basic.showIcon(IconNames.Yes)
+        basic.clearScreen()
+    } else if (speech_recognizer.eventOccurred(emakefun.SpeechRecognitionEvent.EventSpeechRecognitionTimedOut)) {
+        basic.showIcon(IconNames.Asleep)
+        basic.clearScreen()
+    }
+})
+```
+
+### Keyword trigger mode
+
+You can copy the code from below or view the project (blocks and JavaScript view) [here](https://makecode.microbit.org/_HXTCdYgbi0Cw).
+
+```blocks
+let speech_recognizer = emakefun.createSpeechRecognizer(
+48
+)
+speech_recognizer.setRecognitionMode(emakefun.SpeechRecognitionMode.KeywordTrigger)
+speech_recognizer.addKeyword(0, "xiao yi xiao yi")
+speech_recognizer.addKeyword(1, "bei jing")
+speech_recognizer.addKeyword(2, "shang hai")
+speech_recognizer.addKeyword(3, "guang zhou")
+basic.forever(function () {
+    speech_recognizer.recognize()
+    if (speech_recognizer.result() >= 0) {
+        basic.showNumber(speech_recognizer.result())
+        basic.pause(500)
+    }
+    if (speech_recognizer.eventOccurred(emakefun.SpeechRecognitionEvent.EventStartRecognizing)) {
+        basic.showIcon(IconNames.Happy)
+    } else if (speech_recognizer.eventOccurred(emakefun.SpeechRecognitionEvent.EventSpeechRecognized)) {
+        basic.showIcon(IconNames.Yes)
+        basic.clearScreen()
+    } else if (speech_recognizer.eventOccurred(emakefun.SpeechRecognitionEvent.EventSpeechRecognitionTimedOut)) {
+        basic.showIcon(IconNames.Asleep)
+        basic.clearScreen()
+    }
+})
+```
+
+### Button or keyword trigger mode
+
+You can copy the code from below or view the project (blocks and JavaScript view) [here](https://makecode.microbit.org/_CwM2buJmj8cr).
+
+```blocks
+let speech_recognizer = emakefun.createSpeechRecognizer(
+48
+)
+speech_recognizer.setRecognitionMode(emakefun.SpeechRecognitionMode.KeywordOrButtonTrigger)
+speech_recognizer.addKeyword(0, "xiao yi xiao yi")
+speech_recognizer.addKeyword(1, "bei jing")
+speech_recognizer.addKeyword(2, "shang hai")
+speech_recognizer.addKeyword(3, "guang zhou")
+basic.forever(function () {
+    speech_recognizer.recognize()
+    if (speech_recognizer.result() >= 0) {
+        basic.showNumber(speech_recognizer.result())
+        basic.pause(500)
+    }
+    if (speech_recognizer.eventOccurred(emakefun.SpeechRecognitionEvent.EventStartRecognizing)) {
+        basic.showIcon(IconNames.Happy)
+    } else if (speech_recognizer.eventOccurred(emakefun.SpeechRecognitionEvent.EventSpeechRecognized)) {
+        basic.showIcon(IconNames.Yes)
+        basic.clearScreen()
+    } else if (speech_recognizer.eventOccurred(emakefun.SpeechRecognitionEvent.EventSpeechRecognitionTimedOut)) {
+        basic.showIcon(IconNames.Asleep)
+        basic.clearScreen()
+    }
 })
 ```
 
