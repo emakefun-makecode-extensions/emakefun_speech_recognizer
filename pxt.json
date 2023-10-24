@@ -1,6 +1,6 @@
 {
     "name": "EmakefunSpeechRecognizer",
-    "version": "2.1.0",
+    "version": "2.1.2",
     "description": "Extension for Emakefun Speech Recognizer",
     "dependencies": {
         "core": "*",
