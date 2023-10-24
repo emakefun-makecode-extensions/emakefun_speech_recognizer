@@ -1,11 +1,15 @@
-let recognized_speech_index = 0
-let speech_recognizer = Emakefun.createSpeechRecognizer(48)
-speech_recognizer.addSpeechCommand(0, 'bei jing')
-speech_recognizer.addSpeechCommand(1, 'shang hai')
-speech_recognizer.addSpeechCommand(2, 'cheng du')
+let speech_recognizer = emakefun.createSpeechRecognizer(48);
+speech_recognizer.SetRecognitionMode(emakefun.SpeechRecognitionMode.RecognitionAuto);
+speech_recognizer.addKeyword(0, 'bei jing');
+speech_recognizer.addKeyword(1, 'shang hai');
+speech_recognizer.addKeyword(2, 'cheng du');
+
 basic.forever(function() {
-  recognized_speech_index = speech_recognizer.recognizedSpeechIndex()
-  if (recognized_speech_index != -1) {
-    basic.showNumber(recognized_speech_index)
+  speech_recognizer.recognize();
+  if (speech_recognizer.result() >= 0) {
+    basic.showNumber(speech_recognizer.result());
+    basic.pause(500);
+  } else {
+    basic.clearScreen();
   }
 })

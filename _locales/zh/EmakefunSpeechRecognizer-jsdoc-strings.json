@@ -1,6 +1,16 @@
 {
-  "Emakefun.SpeechRecognizer.addSpeechCommand": "添加语音识别命令",
-  "Emakefun.SpeechRecognizer.addSpeechCommand|param|index": "识别到时返回的索引值",
-  "Emakefun.SpeechRecognizer.addSpeechCommand|param|phrase": "要添加的语音短语",
-  "Emakefun.SpeechRecognizer.recognizedSpeechIndex": "获取之前通过addSpeechCommand添加的语音命令短语的识别索引号。"
+  "emakefun.SpeechRecognitionEvent": "语音识别事件",
+  "emakefun.SpeechRecognitionMode": "语音识别模式",
+  "emakefun.SpeechRecognizer": "语音识别模块",
+  "emakefun.SpeechRecognizer.SetRecognitionMode": "设置语音识别模式",
+  "emakefun.SpeechRecognizer.addKeyword": "添加关键词",
+  "emakefun.SpeechRecognizer.addKeyword|param|index": "关键词索引",
+  "emakefun.SpeechRecognizer.addKeyword|param|keyword": "关键词",
+  "emakefun.SpeechRecognizer.eventOccurred": "查询语音识别事件是否生成",
+  "emakefun.SpeechRecognizer.recognize": "开始语音识别",
+  "emakefun.SpeechRecognizer.result": "获取语音识别结果",
+  "emakefun.SpeechRecognizer.setTimeout": "设置语音识别超时时间",
+  "emakefun.SpeechRecognizer.setTimeout|param|timeout": "超时时间，单位毫秒",
+  "emakefun.createSpeechRecognizer": "创建语音识别模块实例",
+  "emakefun.createSpeechRecognizer|param|i2c_address": "语音识别器模块的I2C地址,默认为0x30"
 }

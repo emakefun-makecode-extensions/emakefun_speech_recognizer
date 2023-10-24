@@ -1,7 +1,12 @@
 {
-  "Emakefun.SpeechRecognizer.addSpeechCommand|block": "$this 添加语音识别命令|索引 = $index|语音短语 = $phrase",
-  "Emakefun.SpeechRecognizer.recognizedSpeechIndex|block": "$this 识别的语音索引",
-  "Emakefun.createSpeechRecognizer|block": "创建语音识别模块|I2C地址 = $i2c_address",
+  "emakefun.SpeechRecognizer.SetRecognitionMode|block": "$this 设置语音识别模式为 $speech_recognition_mode",
+  "emakefun.SpeechRecognizer.addKeyword|block": "$this 添加关键词 $keyword, 索引为 $index",
+  "emakefun.SpeechRecognizer.eventOccurred|block": "$this 事件 $event 已发生",
+  "emakefun.SpeechRecognizer.recognize|block": "$this 开始识别",
+  "emakefun.SpeechRecognizer.result|block": "$this 的识别结果",
+  "emakefun.SpeechRecognizer.setTimeout|block": "$this 设置超时时间为 $timeout||ms",
+  "emakefun.createSpeechRecognizer|block": "创建语音识别模块实例, I2C地址为 $i2c_address",
+  "emakefun|block": "Emakefun",
   "{id:category}Emakefun": "Emakefun",
   "{id:subcategory}SpeechRecognizer": "语音识别模块"
 }

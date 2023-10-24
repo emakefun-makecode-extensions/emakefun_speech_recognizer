@@ -1,95 +1,34 @@
 //% block="Emakefun"
-namespace Emakefun {
-  declare const enum Event {
-    RecognitionSuccess = 3,
+namespace emakefun {
+  /**
+   * Recognition modes for the speech recognizer.
+   */
+  export const enum SpeechRecognitionMode {
+    RecognitionAuto = 0,        /**< Automatically start recognition when powered on */
+    ButtonTrigger = 1,          /**< Start recognition when button is pressed */
+    KeywordTrigger = 2,         /**< Start recognition when keyword is spoken */
+    KeywordOrButtonTrigger = 3, /**< Start recognition when keyword is spoken or button is pressed */
   }
 
-  declare const enum CommandFlag {
-    CommandConsumed = 0,
-    CommandSendCompleted = 1,
+  /**
+   * Recognition events for the speech recognizer.
+   */
+  export const enum SpeechRecognitionEvent {
+    EventNone = 0,                  /**< No event */
+    EventStartWaitingForTrigger,    /**< Started waiting for trigger */
+    EventButtonTriggered,           /**< Button trigger occurred */
+    EventKeywordTriggered,          /**< Keyword trigger occurred */
+    EventStartRecognizing,          /**< Started recognizing speech */
+    EventSpeechRecognized,          /**< Speech was recognized */
+    EventSpeechRecognitionTimedOut, /**< Speech recognition timed out */
   }
 
-  declare const enum Address {
-    Version = 0x00,
-    CommandFlag = 0x01,
-    Command = 0x03,
-    PhraseIndex = 0x04,
-    ActivationMode = 0x04,
-    Timeout = 0x04,
-    PhraseData = 0x05,
-    PhraseLength = 0x37,
-    Event = 0x38,
-    Result = 0x39,
-  }
-
-  declare const enum Command {
-    None = 0,
-    Reset = 1,
-    AddSpeechCommand = 2,
-  }
-
-  export class SpeechRecognizer {
-    private readonly i2c_device: Emakefun.I2cDevice = undefined
-
-    /**
-     * Constructor
-     * @param i2c_address I2C address of the module, default 0x30
-     */
-    constructor(i2c_address: number = 0x30) {
-      this.i2c_device = new Emakefun.I2cDevice(i2c_address);
-      this.waitCommandConsumed();
-      this.i2c_device.writeByte(Address.Command, Command.Reset);
-      this.commandSendCompleted();
-    }
-
-    /**
-     * Add a new speech command
-     * @param index the index to return when command is recognized
-     * @param phrase the speech phrase to add
-     */
-    //% block="$this add speech command|index = $index|speech phrase = $phrase"
-    //% subcategory="SpeechRecognizer"
-    //% this.defl=speech_recognizer
-    //% weight=90
-    //% inlineInputMode=external
-    //% index.min=0 index.max=255
-    addSpeechCommand(index: number, phrase: string) {
-      const data = Buffer.fromUTF8(phrase);
-      this.waitCommandConsumed();
-      this.i2c_device.writeBytes(Address.Command, [Command.AddSpeechCommand, index]);
-      this.i2c_device.writeBytes(Address.PhraseData, data);
-      this.i2c_device.writeByte(Address.PhraseLength, data.length);
-      this.commandSendCompleted();
-    }
-
-    /**
-     * Get the index number of the recognized speech command phrase
-     * that was previously added with addSpeechCommand.
-     */
-    //% block="$this recognized speech index"
-    //% subcategory="SpeechRecognizer"
-    //% this.defl=speech_recognizer
-    //% blockSetVariable=recognized_speech_index
-    //% inlineInputMode=external
-    recognizedSpeechIndex(): number {
-      return this.i2c_device.readByte(Address.Event) === Event.RecognitionSuccess ? this.i2c_device.readByte(Address.Result) :
-                                                                                    -1;
-    }
-
-    /**
-     * Wait for the command to be consumed before sending a new one
-     */
-    private waitCommandConsumed(): void {
-      while (this.i2c_device.readByte(Address.CommandFlag) !== CommandFlag.CommandConsumed)
-        ;
-    }
-
-    private commandSendCompleted(): void {
-      this.i2c_device.writeByte(Address.CommandFlag, CommandFlag.CommandSendCompleted);
-    }
-  }
-
-  //% block="create speech recognizer|I2C address = $i2c_address"
+  /**
+   * Create a new speech recognizer instance.
+   * @param i2c_address I2C address of the speech recognizer module, default 0x30
+   * @return The new SpeechRecognizer object
+   */
+  //% block="create speech recognizer with I2C address $i2c_address"
   //% subcategory="SpeechRecognizer"
   //% blockSetVariable=speech_recognizer
   //% i2c_address.defl=0x30
@@ -97,5 +36,129 @@ namespace Emakefun {
   //% inlineInputMode=external
   export function createSpeechRecognizer(i2c_address: number = 0x30): SpeechRecognizer {
     return new SpeechRecognizer(i2c_address);
+  }
+
+  /**
+   * Speech recognizer class.
+   */
+  export class SpeechRecognizer {
+    private readonly i2c_device: emakefun.I2cDevice = undefined;
+    private on_start_waiting_for_trigger: () => void = undefined;
+
+    // DataAddress
+    private static readonly kDataAddressVersion = 0x00;
+    private static readonly kDataAddressBusy = 0x01;
+    private static readonly kDataAddressReset = 0x02;
+    private static readonly kDataAddressRecognitionMode = 0x03;
+    private static readonly kDataAddressResult = 0x04;
+    private static readonly kDataAddressEvent = 0x06;
+    private static readonly kDataAddressTimeout = 0x08;
+    private static readonly kDataAddressKeywordIndex = 0x0C;
+    private static readonly kDataAddressKeywordData = 0x0D;
+    private static readonly kDataAddressKeywordLength = 0x3F;
+    private static readonly kDataAddressAddKeyword = 0x40;
+    private static readonly kDataAddressRecognize = 0x41;
+
+    /**
+     * Constructor
+     * @param i2c_address I2C address of the module, default 0x30
+     */
+    constructor(i2c_address: number = 0x30) {
+      this.i2c_device = new emakefun.I2cDevice(i2c_address);
+      this.waitUntilIdle();
+      this.i2c_device.writeByte(SpeechRecognizer.kDataAddressReset, 1);
+    }
+
+    /**
+     * Set the recognition mode.
+     * @param recognition_mode The recognition mode to set
+     */
+    //% block="$this set speech recognition mode to $speech_recognition_mode"
+    //% subcategory="SpeechRecognizer"
+    //% this.defl=speech_recognizer
+    //% weight=99
+    SetRecognitionMode(speech_recognition_mode: SpeechRecognitionMode) {
+      this.waitUntilIdle();
+      this.i2c_device.writeByte(SpeechRecognizer.kDataAddressRecognitionMode, speech_recognition_mode);
+    }
+
+    /**
+     * Set the recognition timeout.
+     * @param timeout The timeout in milliseconds
+     */
+    //% block="$this set timeout to $timeout||ms"
+    //% subcategory="SpeechRecognizer"
+    //% this.defl=speech_recognizer
+    //% timeout.defl=10000
+    //% weight=98
+    setTimeout(timeout: number) {
+      this.waitUntilIdle();
+      this.i2c_device.writeBytes(SpeechRecognizer.kDataAddressTimeout, Buffer.pack('<L', [timeout]));
+    }
+
+    /**
+     * Add a keyword
+     * @param index the index to return when command is recognized
+     * @param keyword the keyword to add
+     */
+    //% block="$this add keyword $keyword with index $index"
+    //% subcategory="SpeechRecognizer"
+    //% this.defl=speech_recognizer
+    //% weight=90
+    //% index.min=0 index.max=255
+    //% weight=97
+    addKeyword(index: number, keyword: string) {
+      const data = Buffer.fromUTF8(keyword);
+      this.waitUntilIdle();
+      this.i2c_device.writeByte(SpeechRecognizer.kDataAddressKeywordIndex, index);
+      this.i2c_device.writeBytes(SpeechRecognizer.kDataAddressKeywordData, data);
+      this.i2c_device.writeByte(SpeechRecognizer.kDataAddressKeywordLength, data.length);
+      this.i2c_device.writeByte(SpeechRecognizer.kDataAddressAddKeyword, 1);
+    }
+
+    /**
+     * Start speech recognition
+     */
+    //% blockId=speechrecognizer_recognize
+    //% block="$this recognize"
+    //% subcategory="SpeechRecognizer"
+    //% this.defl=speech_recognizer
+    //% weight=96
+    recognize() {
+      this.waitUntilIdle();
+      this.i2c_device.writeByte(SpeechRecognizer.kDataAddressRecognize, 1);
+    }
+
+    /**
+     * Get recognition result
+     * @return The recognized keyword index
+     */
+    //% block="$this result"
+    //% subcategory="SpeechRecognizer"
+    //% this.defl=speech_recognizer
+    //% weight=95
+    result(): number {
+      return Buffer.fromArray(this.i2c_device.readBytes(SpeechRecognizer.kDataAddressResult, 2))
+          .getNumber(NumberFormat.Int16LE, 0);
+    }
+
+    /**
+     * Get the current recognition event
+     *
+     * @param event The recognition event to query
+     * @returns Whether the specified recognition event occurred
+     */
+    //% block="$this event $event occurred"
+    //% subcategory="SpeechRecognizer"
+    //% this.defl=speech_recognizer
+    //% weight=94
+    eventOccurred(event: SpeechRecognitionEvent): boolean {
+      return this.i2c_device.readByte(SpeechRecognizer.kDataAddressEvent) == event;
+    }
+
+    private waitUntilIdle() {
+      while (this.i2c_device.readByte(SpeechRecognizer.kDataAddressBusy) == 1)
+        ;
+    }
   }
 }
