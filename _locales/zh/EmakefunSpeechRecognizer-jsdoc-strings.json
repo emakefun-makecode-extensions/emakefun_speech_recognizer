@@ -2,7 +2,7 @@
   "emakefun.SpeechRecognitionEvent": "语音识别事件",
   "emakefun.SpeechRecognitionMode": "语音识别模式",
   "emakefun.SpeechRecognizer": "语音识别模块",
-  "emakefun.SpeechRecognizer.SetRecognitionMode": "设置语音识别模式",
+  "emakefun.SpeechRecognizer.setRecognitionMode": "设置语音识别模式",
   "emakefun.SpeechRecognizer.addKeyword": "添加关键词",
   "emakefun.SpeechRecognizer.addKeyword|param|index": "关键词索引",
   "emakefun.SpeechRecognizer.addKeyword|param|keyword": "关键词",
