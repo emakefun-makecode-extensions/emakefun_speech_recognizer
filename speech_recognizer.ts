@@ -4,9 +4,13 @@ namespace emakefun {
    * Recognition modes for the speech recognizer.
    */
   export const enum SpeechRecognitionMode {
-    RecognitionAuto = 0,        /**< Automatically start recognition when powered on */
-    ButtonTrigger = 1,          /**< Start recognition when button is pressed */
-    KeywordTrigger = 2,         /**< Start recognition when keyword is spoken */
+    //% block="RecognitionAuto"
+    RecognitionAuto = 0, /**< Automatically start recognition when powered on */
+    //% block="ButtonTrigger"
+    ButtonTrigger = 1, /**< Start recognition when button is pressed */
+    //% block="KeywordTrigger"
+    KeywordTrigger = 2, /**< Start recognition when keyword is spoken */
+    //% block="KeywordOrButtonTrigger"
     KeywordOrButtonTrigger = 3, /**< Start recognition when keyword is spoken or button is pressed */
   }
 
@@ -14,12 +18,19 @@ namespace emakefun {
    * Recognition events for the speech recognizer.
    */
   export const enum SpeechRecognitionEvent {
-    EventNone = 0,                  /**< No event */
-    EventStartWaitingForTrigger,    /**< Started waiting for trigger */
-    EventButtonTriggered,           /**< Button trigger occurred */
-    EventKeywordTriggered,          /**< Keyword trigger occurred */
-    EventStartRecognizing,          /**< Started recognizing speech */
-    EventSpeechRecognized,          /**< Speech was recognized */
+    //% block="EventNone"
+    EventNone = 0, /**< No event */
+    //% block="EventStartWaitingForTrigger"
+    EventStartWaitingForTrigger, /**< Started waiting for trigger */
+    //% block="EventButtonTriggered"
+    EventButtonTriggered, /**< Button trigger occurred */
+    //% block="EventKeywordTriggered"
+    EventKeywordTriggered, /**< Keyword trigger occurred */
+    //% block="EventStartRecognizing"
+    EventStartRecognizing, /**< Started recognizing speech */
+    //% block="EventSpeechRecognized"
+    EventSpeechRecognized, /**< Speech was recognized */
+    //% block="EventSpeechRecognitionTimedOut"
     EventSpeechRecognitionTimedOut, /**< Speech recognition timed out */
   }
 
