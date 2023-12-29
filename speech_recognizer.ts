@@ -41,9 +41,7 @@ namespace emakefun {
   /**
    * Speech recognizer class.
    */
-  export class SpeechRecognizer {
-    private readonly i2c_device: emakefun.I2cDevice = undefined;
-
+  export class SpeechRecognizer extends I2cDevice {
     // DataAddress
     private static readonly kDataAddressVersion = 0x00;
     private static readonly kDataAddressBusy = 0x01;
@@ -63,9 +61,9 @@ namespace emakefun {
      * @param i2c_address I2C address of the module, default 0x30
      */
     constructor(i2c_address: number = 0x30) {
-      this.i2c_device = new emakefun.I2cDevice(i2c_address);
+      super(i2c_address);
       this.waitUntilIdle();
-      this.i2c_device.writeByte(SpeechRecognizer.kDataAddressReset, 1);
+      this.i2cWriteUint8To(SpeechRecognizer.kDataAddressReset, 1);
     }
 
     /**
@@ -78,7 +76,7 @@ namespace emakefun {
     //% weight=99
     setRecognitionMode(speech_recognition_mode: SpeechRecognitionMode) {
       this.waitUntilIdle();
-      this.i2c_device.writeByte(SpeechRecognizer.kDataAddressRecognitionMode, speech_recognition_mode);
+      this.i2cWriteUint8To(SpeechRecognizer.kDataAddressRecognitionMode, speech_recognition_mode);
     }
 
     /**
@@ -92,7 +90,7 @@ namespace emakefun {
     //% weight=98
     setTimeout(timeout: number) {
       this.waitUntilIdle();
-      this.i2c_device.writeBytes(SpeechRecognizer.kDataAddressTimeout, Buffer.pack('<L', [timeout]));
+      this.i2cWriteInt16leTo(SpeechRecognizer.kDataAddressTimeout, timeout);
     }
 
     /**
@@ -109,10 +107,10 @@ namespace emakefun {
     addKeyword(index: number, keyword: string) {
       const data = Buffer.fromUTF8(keyword);
       this.waitUntilIdle();
-      this.i2c_device.writeByte(SpeechRecognizer.kDataAddressKeywordIndex, index);
-      this.i2c_device.writeBytes(SpeechRecognizer.kDataAddressKeywordData, data);
-      this.i2c_device.writeByte(SpeechRecognizer.kDataAddressKeywordLength, data.length);
-      this.i2c_device.writeByte(SpeechRecognizer.kDataAddressAddKeyword, 1);
+      this.i2cWriteUint8To(SpeechRecognizer.kDataAddressKeywordIndex, index);
+      this.i2cWriteTo(SpeechRecognizer.kDataAddressKeywordData, [data]);
+      this.i2cWriteUint8To(SpeechRecognizer.kDataAddressKeywordLength, data.length);
+      this.i2cWriteUint8To(SpeechRecognizer.kDataAddressAddKeyword, 1);
     }
 
     /**
@@ -125,7 +123,7 @@ namespace emakefun {
     //% weight=96
     recognize() {
       this.waitUntilIdle();
-      this.i2c_device.writeByte(SpeechRecognizer.kDataAddressRecognize, 1);
+      this.i2cWriteUint8To(SpeechRecognizer.kDataAddressRecognize, 1);
     }
 
     /**
@@ -137,8 +135,7 @@ namespace emakefun {
     //% this.defl=speech_recognizer
     //% weight=95
     result(): number {
-      return Buffer.fromArray(this.i2c_device.readBytes(SpeechRecognizer.kDataAddressResult, 2))
-          .getNumber(NumberFormat.Int16LE, 0);
+      return this.i2cReadInt16leFrom(SpeechRecognizer.kDataAddressResult);
     }
 
     /**
@@ -152,11 +149,11 @@ namespace emakefun {
     //% this.defl=speech_recognizer
     //% weight=94
     eventOccurred(event: SpeechRecognitionEvent): boolean {
-      return this.i2c_device.readByte(SpeechRecognizer.kDataAddressEvent) == event;
+      return this.i2cReadUint8From(SpeechRecognizer.kDataAddressEvent) == event;
     }
 
     private waitUntilIdle() {
-      while (this.i2c_device.readByte(SpeechRecognizer.kDataAddressBusy) == 1)
+      while (this.i2cReadUint8From(SpeechRecognizer.kDataAddressBusy) == 1)
         ;
     }
   }
