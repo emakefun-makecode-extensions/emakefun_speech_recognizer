@@ -47,7 +47,7 @@
 
 ### Simple example
 
-You can copy the code from below or view the project (blocks and JavaScript view) [here](https://makecode.microbit.org/_ieFfCh9Rs9fh).
+You can copy the code from below or view the project (blocks and JavaScript view) [here](https://makecode.microbit.org/_2gU7MeXsxTL2).
 
 ```blocks
 let speech_recognizer = emakefun.createSpeechRecognizer(
@@ -68,7 +68,7 @@ basic.forever(function () {
 
 ### Button trigger mode
 
-You can copy the code from below or view the project (blocks and JavaScript view) [here](https://makecode.microbit.org/_7oCgom060Axt).
+You can copy the code from below or view the project (blocks and JavaScript view) [here](https://makecode.microbit.org/_iuqfvwMksiT6).
 
 ```blocks
 let speech_recognizer = emakefun.createSpeechRecognizer(
@@ -99,7 +99,7 @@ basic.forever(function () {
 
 ### Keyword trigger mode
 
-You can copy the code from below or view the project (blocks and JavaScript view) [here](https://makecode.microbit.org/_HPF8jX1E7CTk).
+You can copy the code from below or view the project (blocks and JavaScript view) [here](https://makecode.microbit.org/_DRR8M5ETkVJe).
 
 ```blocks
 let speech_recognizer = emakefun.createSpeechRecognizer(
@@ -130,7 +130,7 @@ basic.forever(function () {
 
 ### Button or keyword trigger mode
 
-You can copy the code from below or view the project (blocks and JavaScript view) [here](https://makecode.microbit.org/_VRbTqFK2TW45).
+You can copy the code from below or view the project (blocks and JavaScript view) [here](https://makecode.microbit.org/_Fv2Rh7VAWW02).
 
 ```blocks
 let speech_recognizer = emakefun.createSpeechRecognizer(
@@ -162,7 +162,6 @@ basic.forever(function () {
 ## Supported targets
 
 - for PXT/microbit
-(The metadata above is needed for package search.)
 
 ## License
 
